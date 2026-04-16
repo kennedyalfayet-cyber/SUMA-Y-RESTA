@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Mates Divertidas! 🌈🦄</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            background: linear-gradient(#a1c4fd, #ffe066);
+            color: #222;
+            text-align: center;
+        }
+        header {
+            background: #ff6b6b;
+            color: white;
+            padding: 25px;
+            font-size: 2.6rem;
+        }
+        h1, h2, p, div, span, button {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        .practicas {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 40px;
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .mini-juego {
+            background: #d4fcff;
+            border: 6px dashed #4ecdc4;
+            border-radius: 25px;
+            padding: 25px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .centro {
+            margin: 40px auto;
+            max-width: 600px;
+        }
+        .juego-completo {
+            background: white;
+            border: 8px solid #ffe66d;
+            border-radius: 30px;
+            padding: 35px;
+            margin: 40px auto;
+            max-width: 650px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+            display: none;
+        }
+        button {
+            background: #27ae60;
+            color: white;
+            font-size: 1.8rem;
+            padding: 18px 45px;
+            border: none;
+            border-radius: 50px;
+            margin: 20px;
+            cursor: pointer;
+        }
+        .btn-regresar {
+            background: #e74c3c !important;
+        }
+        input {
+            font-size: 3rem;
+            width: 140px;
+            text-align: center;
+            padding: 12px;
+            border: 5px solid #ff9f1c;
+            border-radius: 18px;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        .bien {
+            color: #2ecc71;
+            font-weight: bold;
+        }
+        .mal {
+            color: #e74c3c;
+        }
+        #progreso {
+            font-size: 2.2rem;
+            margin: 20px;
+        }
+        #final {
+            display: none;
+        }
+        .estrellas {
+            font-size: 5rem;
+            color: gold;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>¡Práctica primero, luego el reto grande!</h1>
+    </header>
+
+    <!-- PRÁCTICAS RÁPIDAS -->
+    <div class="practicas" id="practicasSection">
+
+        <div class="mini-juego">
+            <h2>Práctica Suma</h2>
+            <p>¿Cuánto es?</p>
+            <span id="n1" style="font-size:3.5rem">?</span> + 
+            <span id="n2" style="font-size:3.5rem">?</span> = ?
+            <br><br>
+            <input type="number" id="respuestaSuma">
+            <button onclick="verificarSuma()">¡Comprobar!</button>
+            <div id="resultadoSuma" style="font-size:2.5rem; margin:20px;"></div>
+            <button onclick="nuevaSuma()" style="background:#4ecdc4">Otro</button>
+        </div>
+
+        <div class="mini-juego">
+            <h2>Práctica Resta</h2>
+            <p>¿Cuántos quedan?</p>
+            <span id="grande" style="font-size:3.5rem">?</span> - 
+            <span id="chico" style="font-size:3.5rem">?</span> = ?
+            <br><br>
+            <input type="number" id="respuestaResta">
+            <button onclick="verificarResta()">¡A ver!</button>
+            <div id="resultadoResta" style="font-size:2.5rem; margin:20px;"></div>
+            <button onclick="nuevaResta()" style="background:#ff6b6b">Otro</button>
+        </div>
+
+    </div>
+
+    <!-- BOTÓN CENTRAL -->
+    <div class="centro">
+        <button onclick="mostrarJuegoCompleto()" style="background:#e67e22; font-size:2.2rem; padding:25px 60px;">
+            ¡Juego de 20 preguntas! 🏆
+        </button>
+    </div>
+
+    <!-- JUEGO DE 20 PREGUNTAS -->
+    <div class="juego-completo" id="juegoCompleto">
+
+        <h2>¡Juego de 20 preguntas! 🔥</h2>
+        <div id="progreso">Pregunta <span id="actual">1</span> de 20</div>
+        
+        <div id="pregunta" style="font-size:4.5rem; margin:30px;">¿Cuánto es?</div>
+        
+        <input type="number" id="respuestaCompleto" placeholder="?">
+        <button onclick="verificarCompleto()">¡Comprobar!</button>
+        
+        <div id="resultadoCompleto" style="font-size:3.5rem; margin:30px;"></div>
+        
+        <button onclick="siguienteCompleto()" id="btnSiguiente" style="background:#3498db">Siguiente →</button>
+        
+        <button onclick="volverAPracticas()" class="btn-regresar" style="font-size:1.6rem;">
+            Volver a Prácticas
+        </button>
+        
+        <div id="final">
+            <br><br>
+            <div class="estrellas">¡Lo lograste crack!</div>
+            <p id="puntajeFinal" style="font-size:3rem;"></p>
+            <button onclick="reiniciarCompleto()" style="background:#9b59b6; font-size:2rem">¡Otra ronda!</button>
+            <br><br>
+            <button onclick="volverAPracticas()" class="btn-regresar" style="font-size:2rem">
+                Volver a Prácticas
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Variables prácticas
+        let num1S, num2S, sumaOk;
+        let grandeR, chicoR, restaOk;
+
+        function nuevaSuma() {
+            num1S = Math.floor(Math.random() * 15) + 1;
+            num2S = Math.floor(Math.random() * 15) + 1;
+            sumaOk = num1S + num2S;
+            document.getElementById("n1").innerText = num1S;
+            document.getElementById("n2").innerText = num2S;
+            document.getElementById("respuestaSuma").value = "";
+            document.getElementById("resultadoSuma").innerText = "";
+        }
+        function verificarSuma() {
+            let resp = parseInt(document.getElementById("respuestaSuma").value);
+            let caja = document.getElementById("resultadoSuma");
+            if (resp === sumaOk) {
+                caja.innerText = "¡Genial! ⭐⭐⭐";
+                caja.className = "bien";
+            } else {
+                caja.innerText = "Era " + sumaOk + " 😊";
+                caja.className = "mal";
+            }
+        }
+
+        function nuevaResta() {
+            grandeR = Math.floor(Math.random() * 25) + 10;
+            chicoR = Math.floor(Math.random() * (grandeR - 5)) + 1;
+            restaOk = grandeR - chicoR;
+            document.getElementById("grande").innerText = grandeR;
+            document.getElementById("chico").innerText = chicoR;
+            document.getElementById("respuestaResta").value = "";
+            document.getElementById("resultadoResta").innerText = "";
+        }
+        function verificarResta() {
+            let resp = parseInt(document.getElementById("respuestaResta").value);
+            let caja = document.getElementById("resultadoResta");
+            if (resp === restaOk) {
+                caja.innerText = "¡Perfecto! 🏆";
+                caja.className = "bien";
+            } else {
+                caja.innerText = "Era " + restaOk + " 😄";
+                caja.className = "mal";
+            }
+        }
+
+        // Juego de 20 preguntas
+        let actual = 1;
+        let correctos = 0;
+        let total = 20;
+        let numA, numB, resOk;
+        let esSuma;
+
+        function generarEjercicio() {
+            if (actual > total) return;
+            esSuma = Math.random() > 0.5;
+            if (esSuma) {
+                numA = Math.floor(Math.random() * 15) + 1;
+                numB = Math.floor(Math.random() * 15) + 1;
+                resOk = numA + numB;
+                document.getElementById("pregunta").innerText = numA + " + " + numB + " = ?";
+            } else {
+                numA = Math.floor(Math.random() * 25) + 10;
+                numB = Math.floor(Math.random() * (numA - 5)) + 1;
+                resOk = numA - numB;
+                document.getElementById("pregunta").innerText = numA + " - " + numB + " = ?";
+            }
+            document.getElementById("respuestaCompleto").value = "";
+            document.getElementById("resultadoCompleto").innerText = "";
+            document.getElementById("actual").innerText = actual;
+        }
+
+        function verificarCompleto() {
+            let resp = parseInt(document.getElementById("respuestaCompleto").value);
+            let caja = document.getElementById("resultadoCompleto");
+            if (resp === resOk) {
+                caja.innerText = "¡SÍIIIIÍÍÍ! ⭐";
+                caja.className = "bien";
+                correctos++;
+            } else {
+                caja.innerText = "Era " + resOk + " 😊";
+                caja.className = "mal";
+            }
+        }
+
+        function siguienteCompleto() {
+            if (actual >= total) {
+                document.getElementById("pregunta").style.display = "none";
+                document.getElementById("respuestaCompleto").style.display = "none";
+                document.getElementById("btnSiguiente").style.display = "none";
+                document.querySelectorAll('.btn-regresar')[0].style.display = "none";
+                let finalDiv = document.getElementById("final");
+                finalDiv.style.display = "block";
+                let msg = correctos >= 16 ? "¡Eres una máquina! 🏆 " + correctos + "/20"
+                        : correctos >= 12 ? "¡Muy bien rey! " + correctos + "/20 ⭐⭐⭐"
+                        : "¡Sigue dándole campeón! " + correctos + "/20 😄";
+                document.getElementById("puntajeFinal").innerText = msg;
+                return;
+            }
+            actual++;
+            generarEjercicio();
+        }
+
+        function reiniciarCompleto() {
+            actual = 1;
+            correctos = 0;
+            document.getElementById("pregunta").style.display = "block";
+            document.getElementById("respuestaCompleto").style.display = "inline-block";
+            document.getElementById("btnSiguiente").style.display = "inline-block";
+            document.querySelectorAll('.btn-regresar')[0].style.display = "inline-block";
+            document.getElementById("final").style.display = "none";
+            generarEjercicio();
+        }
+
+        function mostrarJuegoCompleto() {
+            document.getElementById("practicasSection").style.display = "none";
+            document.getElementById("juegoCompleto").style.display = "block";
+            generarEjercicio();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function volverAPracticas() {
+            document.getElementById("juegoCompleto").style.display = "none";
+            document.getElementById("practicasSection").style.display = "flex";
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            nuevaSuma();
+            nuevaResta();
+        }
+
+        // Inicio
+        nuevaSuma();
+        nuevaResta();
+    </script>
+</body>
+</html>
